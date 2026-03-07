@@ -66,3 +66,38 @@ export const registerPet = async (req: AuthRequest, res: Response) => {
     return res.status(500).json({ message: 'Internal server error' });
   }
 };
+
+export const getPetProfile = async (req: AuthRequest, res: Response) => {
+  try {
+    const name = req.params.name as string;
+
+    if (!name) {
+      return res.status(400).json({ message: 'Pet name is required' });
+    }
+
+    const pet = await prisma.pet.findUnique({
+      where: { name },
+      include: {
+        owner: {
+          select: {
+            email: true,
+          },
+        },
+        _count: {
+          select: {
+            posts: true,
+          },
+        },
+      },
+    });
+
+    if (!pet) {
+      return res.status(404).json({ message: 'Pet not found' });
+    }
+
+    return res.status(200).json(pet);
+  } catch (error) {
+    console.error('Get pet profile error:', error);
+    return res.status(500).json({ message: 'Internal server error' });
+  }
+};

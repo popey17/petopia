@@ -34,7 +34,7 @@ const Sidebar: React.FC = () => {
     { icon: <Home size={24} />, label: 'Home', path: '/' },
     { icon: <MessageCircle size={24} />, label: 'Messages', path: '/messages' },
     { icon: <Search size={24} />, label: 'Search', path: '/search' },
-    { icon: <User size={24} />, label: 'Profile', path: '/profile' },
+    { icon: <User size={24} />, label: 'Profile', path: defaultPet ? `/${defaultPet.name}` : '/profile' },
     { icon: <Settings size={24} />, label: 'Settings', path: '/settings' },
   ];
 
@@ -126,7 +126,7 @@ const Sidebar: React.FC = () => {
                     <span>{user.email}</span>
                   </div>
                   <div className={styles['dropdown-items']}>
-                    <button onClick={() => { setIsProfileMenuOpen(false); navigate('/profile'); }}>
+                    <button onClick={() => { setIsProfileMenuOpen(false); navigate(defaultPet ? `/${defaultPet.name}` : '/profile'); }}>
                       <User size={16} /> View Profile
                     </button>
                     <button onClick={() => { setIsProfileMenuOpen(false); /* Switch profile log here */ }}>
