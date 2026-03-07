@@ -1,0 +1,46 @@
+// Color Palette - Cute & Modern
+$primary-pink: #ff85a1;
+$primary-pink-light: #ffafbd;
+$primary-pink-dark: #f06292;
+
+$secondary-mint: #b2f7ef;
+$secondary-mint-dark: #7bdff2;
+
+$accent-yellow: #fef9c3;
+$accent-purple: #e0aaff;
+
+$bg-color: #fff9fb;
+$card-bg: #ffffff;
+$text-main: #4a4a4a;
+$text-muted: #888888;
+$white: #ffffff;
+$border-color: rgba(0, 0, 0, 0.05);
+
+// Sidebar
+$sidebar-width: 280px;
+$sidebar-width-collapsed: 80px;
+
+// Shadows
+$shadow-soft: 0 10px 25px rgba(255, 133, 161, 0.1);
+$shadow-hover: 0 20px 40px rgba(255, 133, 161, 0.2);
+$shadow-sidebar: 4px 0 20px rgba(0, 0, 0, 0.02);
+
+// Border Radius
+$radius-xl: 32px;
+$radius-lg: 24px;
+$radius-md: 16px;
+$radius-sm: 8px;
+
+// Typography
+$font-main: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+
+// Transitions
+$transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+$transition-bounce: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+
+// Z-index
+$z-sidebar: 1000;
+$z-modal: 2000;
+
+// Breakpoints
+$breakpoint-mobile: 768px;

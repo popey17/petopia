@@ -1,0 +1,113 @@
+@import '../root/variables.scss';
+
+.App {
+  display: flex;
+  min-height: 100vh;
+  background-color: $bg-color;
+
+  .main {
+    margin-left: $sidebar-width;
+    flex: 1;
+    padding: 20px 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    transition: $transition-smooth;
+
+    .header {
+      .greeting {
+        font-size: 28px;
+        font-weight: 800;
+        color: $text-main;
+      }
+    }
+
+    .content {
+      display: flex;
+      flex-direction: column;
+      gap: 30px;
+
+      .welcome {
+        background: linear-gradient(135deg, $primary-pink, $primary-pink-dark);
+        color: $white;
+        padding: 40px;
+        border-radius: $radius-xl;
+        box-shadow: $shadow-soft;
+
+        h3 {
+          font-size: 24px;
+          margin-bottom: 10px;
+        }
+
+        p {
+          font-size: 16px;
+          opacity: 0.9;
+        }
+      }
+
+      .placeholder-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 20px;
+
+        .card {
+          aspect-ratio: 16/10;
+          background: $card-bg;
+          border-radius: $radius-lg;
+          border: 1px solid $border-color;
+          box-shadow: $shadow-soft;
+          transition: $transition-smooth;
+
+          &:hover {
+            transform: translateY(-5px);
+            box-shadow: $shadow-hover;
+          }
+        }
+      }
+    }
+  }
+  
+  &.collapsed {
+    .main {
+      margin-left: $sidebar-width-collapsed;
+    }
+  }
+
+  // Mobile Responsive Styles
+  @media (max-width: $breakpoint-mobile) {
+    flex-direction: column;
+
+    .main {
+      margin-left: 0 !important;
+      padding: 80px 20px 100px;
+      gap: 20px;
+
+      .header {
+        .greeting {
+          font-size: 22px;
+          text-align: center;
+        }
+      }
+
+      .content {
+        .welcome {
+          padding: 25px;
+          border-radius: $radius-lg;
+          text-align: center;
+
+          h3 {
+            font-size: 20px;
+          }
+
+          p {
+            font-size: 14px;
+          }
+        }
+
+        .placeholder-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    }
+  }
+}
