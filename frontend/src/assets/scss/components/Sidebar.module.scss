@@ -121,7 +121,7 @@
     flex-direction: column;
     gap: 10px;
     flex: 1;
-    justify-content: center;
+    justify-content: flex-start;
 
     .nav-item {
       display: flex;
@@ -168,17 +168,40 @@
       .label {
         font-size: 16px;
       }
+    }
 
-      &.profile-nav-item {
-        margin-top: auto;
-        padding-top: 10px;
-        padding-bottom: 10px;
+    .profile-menu-container {
+      margin-top: auto;
+      position: relative;
+      width: 100%;
+
+      .profile-nav-item {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        padding: 14px 18px;
         border-top: 1px solid $border-color;
         border-radius: 0;
+        width: 100%;
+        cursor: pointer;
+        background: transparent;
+        border-left: none;
+        border-right: none;
+        border-bottom: none;
+        font-family: inherit;
+        text-align: left;
+        color: inherit;
+        transition: $transition-smooth;
         
         &:hover {
-          transform: none;
           background: rgba($primary-pink, 0.03);
+          transform: none;
+        }
+
+        .icon {
+          display: flex;
+          align-items: center;
+          justify-content: center;
         }
 
         .pet-avatar {
@@ -199,13 +222,99 @@
 
         &.minimized {
           padding: 14px;
+          justify-content: center;
           border-top: 1px solid $border-color;
-          margin-top: auto;
           
           .pet-avatar {
             width: 40px;
             height: 40px;
           }
+        }
+      }
+
+      .profile-dropdown {
+        position: absolute;
+        bottom: calc(100% + 5px);
+        left: 10px;
+        right: 10px;
+        background: rgba($white, 0.95);
+        backdrop-filter: blur(10px);
+        border-radius: 12px;
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+        border: 1px solid $border-color;
+        overflow: hidden;
+        z-index: 1000;
+
+        &.collapsed-dropdown {
+          left: 100%;
+          bottom: 0;
+          right: auto;
+          width: 200px;
+          margin-left: 10px;
+        }
+
+        .dropdown-header {
+          padding: 15px;
+          background: rgba($primary-pink, 0.05);
+          border-bottom: 1px solid $border-color;
+          display: flex;
+          flex-direction: column;
+          gap: 2px;
+
+          strong {
+            font-size: 14px;
+            color: $text-main;
+          }
+
+          span {
+            font-size: 12px;
+            color: $text-muted;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+          }
+        }
+
+        .dropdown-items {
+          padding: 8px;
+          display: flex;
+          flex-direction: column;
+          gap: 4px;
+
+          button {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 12px;
+            border: none;
+            background: transparent;
+            width: 100%;
+            text-align: left;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            color: $text-main;
+            font-family: inherit;
+            transition: $transition-smooth;
+
+            &:hover {
+              background: rgba($primary-pink, 0.1);
+              color: $primary-pink-dark;
+            }
+
+            &.danger {
+              color: #e74c3c;
+              &:hover {
+                background: rgba(#e74c3c, 0.1);
+              }
+            }
+          }
+        }
+
+        .divider {
+          height: 1px;
+          background: $border-color;
+          margin: 4px 0;
         }
       }
     }
@@ -287,17 +396,6 @@
           }
         }
 
-        &.profile-nav-item, &.profile-nav-item.minimized {
-          padding: 8px 0;
-          margin-top: 0;
-          border-top: none;
-          
-          .icon, .pet-avatar {
-            width: 26px;
-            height: 26px;
-          }
-        }
-
         .label {
           display: none !important;
         }
@@ -305,6 +403,111 @@
         &.active {
           .icon {
             color: $primary-pink;
+          }
+        }
+      }
+
+      .profile-menu-container {
+        position: relative;
+        flex: 1;
+
+        .profile-nav-item, .profile-nav-item.minimized {
+          padding: 8px 0;
+          margin-top: 0;
+          border: none;
+          background: transparent;
+          cursor: pointer;
+          width: 100%;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+
+          .icon, .pet-avatar {
+            width: 26px;
+            height: 26px;
+          }
+
+          .label {
+            display: none !important;
+          }
+        }
+        
+        // Hide the dropdown in mobile view and use absolute position above the nav bar
+        .profile-dropdown {
+          position: absolute;
+          bottom: calc(100% + 15px);
+          right: 10px;
+          width: 220px;
+          background: rgba($white, 0.95);
+          backdrop-filter: blur(10px);
+          border-radius: 12px;
+          box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+          border: 1px solid $border-color;
+          overflow: hidden;
+          z-index: 1000;
+
+          .dropdown-header {
+            padding: 15px;
+            background: rgba($primary-pink, 0.05);
+            border-bottom: 1px solid $border-color;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            text-align: left;
+
+            strong {
+              font-size: 14px;
+              color: $text-main;
+            }
+
+            span {
+              font-size: 12px;
+              color: $text-muted;
+              white-space: nowrap;
+              overflow: hidden;
+              text-overflow: ellipsis;
+            }
+          }
+
+          .dropdown-items {
+            padding: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+
+            button {
+              display: flex;
+              align-items: center;
+              gap: 12px;
+              padding: 10px 12px;
+              border: none;
+              background: transparent;
+              width: 100%;
+              text-align: left;
+              border-radius: 8px;
+              cursor: pointer;
+              font-size: 14px;
+              color: $text-main;
+              font-family: inherit;
+
+              &:hover {
+                background: rgba($primary-pink, 0.1);
+                color: $primary-pink-dark;
+              }
+
+              &.danger {
+                color: #e74c3c;
+                &:hover {
+                  background: rgba(#e74c3c, 0.1);
+                }
+              }
+            }
+          }
+
+          .divider {
+            height: 1px;
+            background: $border-color;
+            margin: 4px 0;
           }
         }
       }

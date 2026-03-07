@@ -65,8 +65,25 @@ export const useAuthStore = create<AuthState>((set) => ({
     }
   },
   checkAuth: async () => {
-    // In a full implementation, you'd hit a /me endpoint here to verify the HTTP-only cookie
-    // For now, we'll just set loading to false to allow the app to render the login screen
-    set({ isLoading: false });
+    try {
+      const response = await fetch('/api/v1/auth/me');
+      
+      if (!response.ok) {
+        throw new Error('Not authenticated');
+      }
+
+      const data = await response.json();
+      set({ 
+        user: data.user, 
+        isAuthenticated: true, 
+        isLoading: false 
+      });
+    } catch {
+      set({ 
+        user: null, 
+        isAuthenticated: false, 
+        isLoading: false 
+      });
+    }
   }
 }));

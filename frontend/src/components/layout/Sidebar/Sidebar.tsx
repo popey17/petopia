@@ -1,15 +1,34 @@
-import React from 'react';
-import { NavLink } from 'react-router-dom';
-import { Home, MessageCircle, Search, User, Settings, Dog, ChevronLeft, ChevronRight } from 'lucide-react';
-import { motion } from 'framer-motion';
+import React, { useState, useRef, useEffect } from 'react';
+import { NavLink, useNavigate } from 'react-router-dom';
+import { Home, MessageCircle, Search, User, Settings, Dog, ChevronLeft, ChevronRight, LogOut, Repeat } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useUIStore } from '../../../stores/useUIStore';
 import { useAuthStore } from '../../../stores/useAuthStore';
 import styles from '../../../assets/scss/components/Sidebar.module.scss';
 
 const Sidebar: React.FC = () => {
   const { sidebarCollapsed: isCollapsed, toggleSidebar } = useUIStore();
-  const user = useAuthStore((state) => state.user);
+  const { user, logout } = useAuthStore();
   const defaultPet = user?.defaultPet;
+  const navigate = useNavigate();
+
+  const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setIsProfileMenuOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const handleLogout = async () => {
+    await logout();
+    navigate('/login');
+  };
 
   const navItems = [
     { icon: <Home size={24} />, label: 'Home', path: '/' },
@@ -70,27 +89,58 @@ const Sidebar: React.FC = () => {
             )}
           </NavLink>
         ))}
-        {defaultPet && (
-          <NavLink 
-            to="/profile"
-            title={isCollapsed ? defaultPet.name : undefined}
-            className={({ isActive }: { isActive: boolean }) => `${styles['nav-item']} ${styles['profile-nav-item']} ${isActive ? styles.active : ''} ${isCollapsed ? styles.minimized : ''}`}
-          >
-            <span className={styles.icon}>
-              <div className={styles['pet-avatar']}>
-                <img src={defaultPet.image} alt={defaultPet.name} />
-              </div>
-            </span>
-            {!isCollapsed && (
-              <motion.span 
-                className={styles.label}
-                initial={{ opacity: 0, x: -5 }}
-                animate={{ opacity: 1, x: 0 }}
-              >
-                Profile
-              </motion.span>
-            )}
-          </NavLink>
+        {user && (
+          <div className={styles['profile-menu-container']} ref={menuRef}>
+            <button 
+              onClick={() => setIsProfileMenuOpen(!isProfileMenuOpen)}
+              title={isCollapsed ? (defaultPet?.name || user.name) : undefined}
+              className={`${styles['nav-item']} ${styles['profile-nav-item']} ${isProfileMenuOpen ? styles.active : ''} ${isCollapsed ? styles.minimized : ''}`}
+            >
+              <span className={styles.icon}>
+                <div className={styles['pet-avatar']}>
+                  <img src={defaultPet?.image || user.avatar || 'https://api.dicebear.com/7.x/avataaars/svg?seed=Lucky'} alt="Profile" />
+                </div>
+              </span>
+              {!isCollapsed && (
+                <motion.span 
+                  className={styles.label}
+                  initial={{ opacity: 0, x: -5 }}
+                  animate={{ opacity: 1, x: 0 }}
+                >
+                  Profile
+                </motion.span>
+              )}
+            </button>
+
+            <AnimatePresence>
+              {isProfileMenuOpen && (
+                <motion.div 
+                  className={`${styles['profile-dropdown']} ${isCollapsed ? styles['collapsed-dropdown'] : ''}`}
+                  initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <div className={styles['dropdown-header']}>
+                    <strong>{user.name}</strong>
+                    <span>{user.email}</span>
+                  </div>
+                  <div className={styles['dropdown-items']}>
+                    <button onClick={() => { setIsProfileMenuOpen(false); navigate('/profile'); }}>
+                      <User size={16} /> View Profile
+                    </button>
+                    <button onClick={() => { setIsProfileMenuOpen(false); /* Switch profile log here */ }}>
+                      <Repeat size={16} /> Switch Profile
+                    </button>
+                    <div className={styles.divider} />
+                    <button className={styles.danger} onClick={handleLogout}>
+                      <LogOut size={16} /> Logout
+                    </button>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
         )}
       </nav>
     </aside>
