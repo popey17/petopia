@@ -251,6 +251,12 @@
           right: auto;
           width: 200px;
           margin-left: 10px;
+          @media (max-width: $breakpoint-mobile) {
+            right: 0;
+            left: auto;
+            bottom: 100%;
+            margin-left: 0;
+          }
         }
 
         .dropdown-header {
@@ -410,6 +416,7 @@
       .profile-menu-container {
         position: relative;
         flex: 1;
+        margin-top: 0;
 
         .profile-nav-item, .profile-nav-item.minimized {
           padding: 8px 0;
