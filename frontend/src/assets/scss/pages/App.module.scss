@@ -1,0 +1,113 @@
+@use '../root/variables.scss' as variables;
+
+.App {
+  display: flex;
+  min-height: 100vh;
+  background-color: variables.$bg-color;
+
+  .main {
+    margin-left: variables.$sidebar-width;
+    flex: 1;
+    padding: 20px 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    transition: variables.$transition-smooth;
+
+    .header {
+      .greeting {
+        font-size: 28px;
+        font-weight: 800;
+        color: variables.$text-main;
+      }
+    }
+
+    .content {
+      display: flex;
+      flex-direction: column;
+      gap: 30px;
+
+      .welcome {
+        background: linear-gradient(135deg, variables.$primary-pink, variables.$primary-pink-dark);
+        color: variables.$white;
+        padding: 40px;
+        border-radius: variables.$radius-xl;
+        box-shadow: variables.$shadow-soft;
+
+        h3 {
+          font-size: 24px;
+          margin-bottom: 10px;
+        }
+
+        p {
+          font-size: 16px;
+          opacity: 0.9;
+        }
+      }
+
+      .placeholder-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 20px;
+
+        .card {
+          aspect-ratio: 16/10;
+          background: variables.$card-bg;
+          border-radius: variables.$radius-lg;
+          border: 1px solid variables.$border-color;
+          box-shadow: variables.$shadow-soft;
+          transition: variables.$transition-smooth;
+
+          &:hover {
+            transform: translateY(-5px);
+            box-shadow: variables.$shadow-hover;
+          }
+        }
+      }
+    }
+  }
+  
+  &.collapsed {
+    .main {
+      margin-left: variables.$sidebar-width-collapsed;
+    }
+  }
+
+  // Mobile Responsive Styles
+  @media (max-width: variables.$breakpoint-mobile) {
+    flex-direction: column;
+
+    .main {
+      margin-left: 0 !important;
+      padding: 80px 20px 100px;
+      gap: 20px;
+
+      .header {
+        .greeting {
+          font-size: 22px;
+          text-align: center;
+        }
+      }
+
+      .content {
+        .welcome {
+          padding: 25px;
+          border-radius: variables.$radius-lg;
+          text-align: center;
+
+          h3 {
+            font-size: 20px;
+          }
+
+          p {
+            font-size: 14px;
+          }
+        }
+
+        .placeholder-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    }
+  }
+}
