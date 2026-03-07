@@ -236,8 +236,8 @@
     .post-card {
       position: relative;
       aspect-ratio: 1 / 1;
-      background: #efefef;
       overflow: hidden;
+      border-radius: variables.$radius-md;
       cursor: pointer;
       width: calc((100% - 8px) / 5);
       @media (max-width: variables.$breakpoint-tablet) {

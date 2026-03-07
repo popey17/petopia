@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { MapPin, Calendar, Grid, Camera, Heart, MessageCircle } from 'lucide-react';
 import styles from './Profile.module.scss';
+import PostDetail from '../../components/PostDetail/PostDetail';
 
 interface PetProfile {
   id: string;
@@ -32,6 +33,7 @@ const Profile: React.FC = () => {
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [selectedPostId, setSelectedPostId] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -118,7 +120,11 @@ const Profile: React.FC = () => {
       <div className={styles['posts-grid']}>
         {posts.length > 0 ? (
           posts.map((post) => (
-            <div key={post.id} className={styles['post-card']}>
+            <div 
+              key={post.id} 
+              className={styles['post-card']}
+              onClick={() => setSelectedPostId(post.id)}
+            >
               <img src={post.images[0]?.url} alt={post.caption || 'Pet post'} />
               <div className={styles.overlay}>
                 <span><Heart size={20} fill="white" /> 0</span>
@@ -136,6 +142,13 @@ const Profile: React.FC = () => {
           </div>
         )}
       </div>
+
+      {selectedPostId && (
+        <PostDetail 
+          postId={selectedPostId} 
+          onClose={() => setSelectedPostId(null)} 
+        />
+      )}
     </div>
   );
 };
