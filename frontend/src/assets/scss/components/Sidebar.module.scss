@@ -21,6 +21,9 @@
 
     .logo-section {
       justify-content: center;
+      @media (max-width: variables.$breakpoint-mobile) {
+        justify-content: flex-start;
+      }
     }
 
     .nav {

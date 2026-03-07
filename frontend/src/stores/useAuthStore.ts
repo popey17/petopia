@@ -8,7 +8,8 @@ interface User {
   defaultPet?: {
     id: string;
     name: string;
-    image: string;
+    displayName: string;
+    avatar?: string;
   };
 }
 

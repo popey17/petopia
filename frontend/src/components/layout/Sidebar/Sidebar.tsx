@@ -13,7 +13,16 @@ const Sidebar: React.FC = () => {
   const navigate = useNavigate();
 
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
   const menuRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -58,7 +67,7 @@ const Sidebar: React.FC = () => {
         >
           <Dog size={32} />
         </motion.div>
-        {!isCollapsed && (
+        {(!isCollapsed || isMobile) && (
           <motion.span 
             className={styles['logo-text']}
             initial={{ opacity: 0, x: -10 }}
@@ -98,7 +107,7 @@ const Sidebar: React.FC = () => {
             >
               <span className={styles.icon}>
                 <div className={styles['pet-avatar']}>
-                  <img src={defaultPet?.image || user.avatar || 'https://api.dicebear.com/7.x/avataaars/svg?seed=Lucky'} alt="Profile" />
+                  <img src={defaultPet?.avatar || user.avatar || 'https://api.dicebear.com/7.x/avataaars/svg?seed=Lucky'} alt="Profile" />
                 </div>
               </span>
               {!isCollapsed && (
@@ -107,7 +116,7 @@ const Sidebar: React.FC = () => {
                   initial={{ opacity: 0, x: -5 }}
                   animate={{ opacity: 1, x: 0 }}
                 >
-                  Profile
+                  {defaultPet?.displayName || user.name}
                 </motion.span>
               )}
             </button>
