@@ -1,22 +1,22 @@
-@import '../root/variables.scss';
+@use '../root/variables.scss' as variables;
 
 .Sidebar {
-  width: $sidebar-width;
+  width: variables.$sidebar-width;
   height: 100vh;
-  background: $white;
-  border-right: 1px solid $border-color;
+  background: variables.$white;
+  border-right: 1px solid variables.$border-color;
   display: flex;
   flex-direction: column;
   padding: 20px;
   position: fixed;
   left: 0;
   top: 0;
-  box-shadow: $shadow-sidebar;
-  z-index: $z-sidebar;
-  transition: $transition-smooth;
+  box-shadow: variables.$shadow-sidebar;
+  z-index: variables.$z-sidebar;
+  transition: variables.$transition-smooth;
 
   &.collapsed {
-    width: $sidebar-width-collapsed;
+    width: variables.$sidebar-width-collapsed;
     padding: 20px 15px;
 
     .logo-section {
@@ -46,15 +46,15 @@
     width: 28px;
     height: 28px;
     border-radius: 10px;
-    background: $white;
+    background: variables.$white;
     border: none;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    box-shadow: 0 4px 10px rgba($primary-pink, 0.2);
-    color: $primary-pink;
-    transition: $transition-bounce;
+    box-shadow: 0 4px 10px rgba(variables.$primary-pink, 0.2);
+    color: variables.$primary-pink;
+    transition: variables.$transition-bounce;
     z-index: 10;
     padding: 0;
 
@@ -65,19 +65,19 @@
       align-items: center;
       justify-content: center;
       border-radius: inherit;
-      background: linear-gradient(135deg, $white, rgba($primary-pink, 0.05));
-      border: 2px solid rgba($primary-pink, 0.1);
-      transition: $transition-smooth;
+      background: linear-gradient(135deg, variables.$white, rgba(variables.$primary-pink, 0.05));
+      border: 2px solid rgba(variables.$primary-pink, 0.1);
+      transition: variables.$transition-smooth;
     }
 
     &:hover {
       transform: scale(1.15) rotate(5deg);
       
       .toggle-inner {
-        background: linear-gradient(135deg, $primary-pink, $primary-pink-dark);
-        color: $white;
+        background: linear-gradient(135deg, variables.$primary-pink, variables.$primary-pink-dark);
+        color: variables.$white;
         border-color: transparent;
-        box-shadow: 0 5px 15px rgba($primary-pink, 0.4);
+        box-shadow: 0 5px 15px rgba(variables.$primary-pink, 0.4);
       }
     }
 
@@ -93,15 +93,15 @@
     margin-bottom: 50px;
 
     .logo {
-      background: linear-gradient(135deg, $primary-pink, $primary-pink-dark);
+      background: linear-gradient(135deg, variables.$primary-pink, variables.$primary-pink-dark);
       width: 45px;
       height: 45px;
       border-radius: 14px;
       display: flex;
       align-items: center;
       justify-content: center;
-      color: $white;
-      box-shadow: 0 5px 15px rgba($primary-pink, 0.3);
+      color: variables.$white;
+      box-shadow: 0 5px 15px rgba(variables.$primary-pink, 0.3);
       flex-shrink: 0;
     }
 
@@ -109,7 +109,7 @@
       font-size: 22px;
       font-weight: 800;
       letter-spacing: -0.5px;
-      background: linear-gradient(135deg, $primary-pink-dark, $text-main);
+      background: linear-gradient(135deg, variables.$primary-pink-dark, variables.$text-main);
       -webkit-background-clip: text;
       background-clip: text;
       -webkit-text-fill-color: transparent;
@@ -128,11 +128,11 @@
       align-items: center;
       gap: 15px;
       padding: 14px 18px;
-      border-radius: $radius-md;
+      border-radius: variables.$radius-md;
       text-decoration: none;
-      color: $text-main;
+      color: variables.$text-main;
       font-weight: 600;
-      transition: $transition-smooth;
+      transition: variables.$transition-smooth;
       margin-bottom: 8px;
 
       &.minimized {
@@ -143,17 +143,17 @@
       }
 
       &:hover {
-        background: rgba($primary-pink, 0.05);
-        color: $primary-pink-dark;
+        background: rgba(variables.$primary-pink, 0.05);
+        color: variables.$primary-pink-dark;
         transform: translateX(5px);
       }
 
       &.active {
-        background: linear-gradient(135deg, rgba($primary-pink, 0.1), rgba($primary-pink-light, 0.05));
-        color: $primary-pink-dark;
+        background: linear-gradient(135deg, rgba(variables.$primary-pink, 0.1), rgba(variables.$primary-pink-light, 0.05));
+        color: variables.$primary-pink-dark;
 
         .icon {
-          color: $primary-pink;
+          color: variables.$primary-pink;
         }
       }
 
@@ -161,8 +161,8 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        color: $text-muted;
-        transition: $transition-smooth;
+        color: variables.$text-muted;
+        transition: variables.$transition-smooth;
       }
 
       .label {
@@ -180,7 +180,7 @@
         align-items: center;
         gap: 15px;
         padding: 14px 18px;
-        border-top: 1px solid $border-color;
+        border-top: 1px solid variables.$border-color;
         border-radius: 0;
         width: 100%;
         cursor: pointer;
@@ -191,10 +191,10 @@
         font-family: inherit;
         text-align: left;
         color: inherit;
-        transition: $transition-smooth;
+        transition: variables.$transition-smooth;
         
         &:hover {
-          background: rgba($primary-pink, 0.03);
+          background: rgba(variables.$primary-pink, 0.03);
           transform: none;
         }
 
@@ -209,8 +209,8 @@
           height: 28px;
           border-radius: 50%;
           overflow: hidden;
-          border: 2px solid $primary-pink;
-          box-shadow: 0 4px 10px rgba($primary-pink, 0.2);
+          border: 2px solid variables.$primary-pink;
+          box-shadow: 0 4px 10px rgba(variables.$primary-pink, 0.2);
           flex-shrink: 0;
 
           img {
@@ -223,7 +223,7 @@
         &.minimized {
           padding: 14px;
           justify-content: center;
-          border-top: 1px solid $border-color;
+          border-top: 1px solid variables.$border-color;
           
           .pet-avatar {
             width: 40px;
@@ -237,11 +237,11 @@
         bottom: calc(100% + 5px);
         left: 10px;
         right: 10px;
-        background: rgba($white, 0.95);
+        background: rgba(variables.$white, 0.95);
         backdrop-filter: blur(10px);
         border-radius: 12px;
         box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
-        border: 1px solid $border-color;
+        border: 1px solid variables.$border-color;
         overflow: hidden;
         z-index: 1000;
 
@@ -251,7 +251,7 @@
           right: auto;
           width: 200px;
           margin-left: 10px;
-          @media (max-width: $breakpoint-mobile) {
+          @media (max-width: variables.$breakpoint-mobile) {
             right: 0;
             left: auto;
             bottom: 100%;
@@ -261,20 +261,20 @@
 
         .dropdown-header {
           padding: 15px;
-          background: rgba($primary-pink, 0.05);
-          border-bottom: 1px solid $border-color;
+          background: rgba(variables.$primary-pink, 0.05);
+          border-bottom: 1px solid variables.$border-color;
           display: flex;
           flex-direction: column;
           gap: 2px;
 
           strong {
             font-size: 14px;
-            color: $text-main;
+            color: variables.$text-main;
           }
 
           span {
             font-size: 12px;
-            color: $text-muted;
+            color: variables.$text-muted;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -299,13 +299,13 @@
             border-radius: 8px;
             cursor: pointer;
             font-size: 14px;
-            color: $text-main;
+            color: variables.$text-main;
             font-family: inherit;
-            transition: $transition-smooth;
+            transition: variables.$transition-smooth;
 
             &:hover {
-              background: rgba($primary-pink, 0.1);
-              color: $primary-pink-dark;
+              background: rgba(variables.$primary-pink, 0.1);
+              color: variables.$primary-pink-dark;
             }
 
             &.danger {
@@ -319,7 +319,7 @@
 
         .divider {
           height: 1px;
-          background: $border-color;
+          background: variables.$border-color;
           margin: 4px 0;
         }
       }
@@ -331,7 +331,7 @@
   }
 
   // Mobile Responsive Styles
-  @media (max-width: $breakpoint-mobile) {
+  @media (max-width: variables.$breakpoint-mobile) {
     width: 0;
     height: 0;
     padding: 0;
@@ -350,10 +350,10 @@
       height: 60px;
       margin-bottom: 0;
       padding: 0 20px;
-      background: rgba($white, 0.8);
+      background: rgba(variables.$white, 0.8);
       backdrop-filter: blur(10px);
-      border-bottom: 1px solid $border-color;
-      z-index: $z-sidebar;
+      border-bottom: 1px solid variables.$border-color;
+      z-index: variables.$z-sidebar;
       justify-content: flex-start;
       gap: 10px;
 
@@ -375,13 +375,13 @@
       width: 100%;
       height: 70px;
       flex-direction: row;
-      background: rgba($white, 0.9);
+      background: rgba(variables.$white, 0.9);
       backdrop-filter: blur(15px);
-      border-top: 1px solid $border-color;
+      border-top: 1px solid variables.$border-color;
       padding: 0 10px;
       justify-content: space-around;
       align-items: center;
-      z-index: $z-sidebar;
+      z-index: variables.$z-sidebar;
 
       .nav-item {
         flex: 1;
@@ -393,7 +393,7 @@
         transform: none !important;
 
         .icon {
-          color: $text-muted;
+          color: variables.$text-muted;
           margin: 0;
           
           svg {
@@ -408,7 +408,7 @@
 
         &.active {
           .icon {
-            color: $primary-pink;
+            color: variables.$primary-pink;
           }
         }
       }
@@ -445,18 +445,18 @@
           bottom: calc(100% + 15px);
           right: 10px;
           width: 220px;
-          background: rgba($white, 0.95);
+          background: rgba(variables.$white, 0.95);
           backdrop-filter: blur(10px);
           border-radius: 12px;
           box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
-          border: 1px solid $border-color;
+          border: 1px solid variables.$border-color;
           overflow: hidden;
           z-index: 1000;
 
           .dropdown-header {
             padding: 15px;
-            background: rgba($primary-pink, 0.05);
-            border-bottom: 1px solid $border-color;
+            background: rgba(variables.$primary-pink, 0.05);
+            border-bottom: 1px solid variables.$border-color;
             display: flex;
             flex-direction: column;
             gap: 2px;
@@ -464,12 +464,12 @@
 
             strong {
               font-size: 14px;
-              color: $text-main;
+              color: variables.$text-main;
             }
 
             span {
               font-size: 12px;
-              color: $text-muted;
+              color: variables.$text-muted;
               white-space: nowrap;
               overflow: hidden;
               text-overflow: ellipsis;
@@ -494,12 +494,12 @@
               border-radius: 8px;
               cursor: pointer;
               font-size: 14px;
-              color: $text-main;
+              color: variables.$text-main;
               font-family: inherit;
 
               &:hover {
-                background: rgba($primary-pink, 0.1);
-                color: $primary-pink-dark;
+                background: rgba(variables.$primary-pink, 0.1);
+                color: variables.$primary-pink-dark;
               }
 
               &.danger {
@@ -513,7 +513,7 @@
 
           .divider {
             height: 1px;
-            background: $border-color;
+            background: variables.$border-color;
             margin: 4px 0;
           }
         }

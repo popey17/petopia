@@ -1,24 +1,24 @@
-@import '../root/variables.scss';
+@use '../root/variables.scss' as variables;
 
 .App {
   display: flex;
   min-height: 100vh;
-  background-color: $bg-color;
+  background-color: variables.$bg-color;
 
   .main {
-    margin-left: $sidebar-width;
+    margin-left: variables.$sidebar-width;
     flex: 1;
     padding: 20px 40px;
     display: flex;
     flex-direction: column;
     gap: 30px;
-    transition: $transition-smooth;
+    transition: variables.$transition-smooth;
 
     .header {
       .greeting {
         font-size: 28px;
         font-weight: 800;
-        color: $text-main;
+        color: variables.$text-main;
       }
     }
 
@@ -28,11 +28,11 @@
       gap: 30px;
 
       .welcome {
-        background: linear-gradient(135deg, $primary-pink, $primary-pink-dark);
-        color: $white;
+        background: linear-gradient(135deg, variables.$primary-pink, variables.$primary-pink-dark);
+        color: variables.$white;
         padding: 40px;
-        border-radius: $radius-xl;
-        box-shadow: $shadow-soft;
+        border-radius: variables.$radius-xl;
+        box-shadow: variables.$shadow-soft;
 
         h3 {
           font-size: 24px;
@@ -52,15 +52,15 @@
 
         .card {
           aspect-ratio: 16/10;
-          background: $card-bg;
-          border-radius: $radius-lg;
-          border: 1px solid $border-color;
-          box-shadow: $shadow-soft;
-          transition: $transition-smooth;
+          background: variables.$card-bg;
+          border-radius: variables.$radius-lg;
+          border: 1px solid variables.$border-color;
+          box-shadow: variables.$shadow-soft;
+          transition: variables.$transition-smooth;
 
           &:hover {
             transform: translateY(-5px);
-            box-shadow: $shadow-hover;
+            box-shadow: variables.$shadow-hover;
           }
         }
       }
@@ -69,12 +69,12 @@
   
   &.collapsed {
     .main {
-      margin-left: $sidebar-width-collapsed;
+      margin-left: variables.$sidebar-width-collapsed;
     }
   }
 
   // Mobile Responsive Styles
-  @media (max-width: $breakpoint-mobile) {
+  @media (max-width: variables.$breakpoint-mobile) {
     flex-direction: column;
 
     .main {
@@ -92,7 +92,7 @@
       .content {
         .welcome {
           padding: 25px;
-          border-radius: $radius-lg;
+          border-radius: variables.$radius-lg;
           text-align: center;
 
           h3 {
