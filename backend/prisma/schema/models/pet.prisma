@@ -1,0 +1,25 @@
+model Pet {
+  id   String @id @default(uuid()) @db.Uuid
+  name String @unique
+
+  displayName String
+  bio         String?
+  avatar      String?
+  species     String
+  breed       String
+  gender      String
+  birthDate   DateTime?
+  location    String?
+
+  ownerId String @db.Uuid
+  owner   User   @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+
+  defaultFor User? @relation("defaultPet")
+
+  posts Post[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("pets")
+}
