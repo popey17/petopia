@@ -7,7 +7,7 @@ import styles from '../../assets/scss/pages/Login.module.scss';
 const Login: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const { login, error, isLoading } = useAuthStore();
+  const { login, error, isLoggingIn } = useAuthStore();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -71,9 +71,9 @@ const Login: React.FC = () => {
             </div>
           </div>
 
-          <button type="submit" className={styles['submit-btn']} disabled={isLoading}>
-            {isLoading ? 'Signing In...' : 'Sign In'}
-            {!isLoading && <Heart size={18} fill="currentColor" />}
+          <button type="submit" className={styles['submit-btn']} disabled={isLoggingIn}>
+            {isLoggingIn ? 'Signing In...' : 'Sign In'}
+            {!isLoggingIn && <Heart size={18} fill="currentColor" />}
           </button>
         </form>
 

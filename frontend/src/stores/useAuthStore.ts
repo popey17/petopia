@@ -16,7 +16,8 @@ interface User {
 interface AuthState {
   user: User | null;
   isAuthenticated: boolean;
-  isLoading: boolean;
+  isCheckingAuth: boolean;
+  isLoggingIn: boolean;
   error: string | null;
   login: (email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
@@ -26,10 +27,11 @@ interface AuthState {
 export const useAuthStore = create<AuthState>((set) => ({
   user: null,
   isAuthenticated: false,
-  isLoading: true, // Start true while we check auth
+  isCheckingAuth: true, // Start true while we check auth
+  isLoggingIn: false,
   error: null,
   login: async (email, password) => {
-    set({ isLoading: true, error: null });
+    set({ isLoggingIn: true, error: null });
     try {
       const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/auth/login`, {
         method: 'POST',
@@ -46,12 +48,12 @@ export const useAuthStore = create<AuthState>((set) => ({
       set({ 
         user: data.user, 
         isAuthenticated: true,
-        isLoading: false 
+        isLoggingIn: false 
       });
     } catch (error: unknown) {
       set({ 
         error: error instanceof Error ? error.message : 'An unexpected error occurred',
-        isLoading: false 
+        isLoggingIn: false 
       });
       throw error;
     }
@@ -77,13 +79,13 @@ export const useAuthStore = create<AuthState>((set) => ({
       set({ 
         user: data.user, 
         isAuthenticated: true, 
-        isLoading: false 
+        isCheckingAuth: false 
       });
     } catch {
       set({ 
         user: null, 
         isAuthenticated: false, 
-        isLoading: false 
+        isCheckingAuth: false 
       });
     }
   }

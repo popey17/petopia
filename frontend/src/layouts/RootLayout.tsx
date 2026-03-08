@@ -3,13 +3,13 @@ import { Outlet } from 'react-router-dom';
 import { useAuthStore } from '../stores/useAuthStore';
 
 const RootLayout = () => {
-  const { isLoading, checkAuth } = useAuthStore();
+  const { isCheckingAuth, checkAuth } = useAuthStore();
 
   useEffect(() => {
     checkAuth();
   }, [checkAuth]);
 
-  if (isLoading) {
+  if (isCheckingAuth) {
     return (
       <div style={{ 
         display: 'flex', 
