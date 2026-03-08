@@ -40,12 +40,12 @@ const Profile: React.FC = () => {
       if (!petName) return;
       setLoading(true);
       try {
-        const petRes = await fetch(`/api/v1/pets/${petName}`);
+        const petRes = await fetch(`${import.meta.env.VITE_API_BASE_URL}/pets/${petName}`);
         if (!petRes.ok) throw new Error('Pet not found');
         const petData = await petRes.json();
         setPet(petData);
 
-        const postsRes = await fetch(`/api/v1/posts/pet/${petData.id}`);
+        const postsRes = await fetch(`${import.meta.env.VITE_API_BASE_URL}/posts/pet/${petData.id}`);
         if (postsRes.ok) {
           const postsData = await postsRes.json();
           setPosts(postsData);

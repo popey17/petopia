@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../../stores/useAuthStore';
 import { Dog, Mail, Lock, Heart } from 'lucide-react';
 import { motion } from 'framer-motion';
@@ -9,13 +8,11 @@ const Login: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const { login, error, isLoading } = useAuthStore();
-  const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
       await login(email, password);
-      navigate('/');
     } catch {
       // Error is handled by the store and displayed in the UI
     }
@@ -23,7 +20,7 @@ const Login: React.FC = () => {
 
   return (
     <div className={styles.Login}>
-      <motion.div 
+      <motion.div
         className={styles['login-card']}
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -84,7 +81,7 @@ const Login: React.FC = () => {
           <p>Don't have an account? <a href="/signup">Join Petopia</a></p>
         </footer>
       </motion.div>
-      
+
       <div className={styles.background}>
         <div className={styles.circle1} />
         <div className={styles.circle2} />

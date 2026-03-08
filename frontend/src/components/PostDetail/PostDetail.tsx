@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { X, Heart, MessageCircle, Calendar } from 'lucide-react';
+import { X, Heart, MessageCircle } from 'lucide-react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination } from 'swiper/modules';
 import styles from './PostDetail.module.scss';
@@ -36,7 +36,7 @@ const PostDetail: React.FC<PostDetailProps> = ({ postId, onClose }) => {
     const fetchPostDetail = async () => {
       setLoading(true);
       try {
-        const res = await fetch(`/api/v1/posts/${postId}`);
+        const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/posts/${postId}`);
         if (!res.ok) throw new Error('Post not found');
         const data = await res.json();
         setPost(data);

@@ -31,7 +31,7 @@ export const useAuthStore = create<AuthState>((set) => ({
   login: async (email, password) => {
     set({ isLoading: true, error: null });
     try {
-      const response = await fetch('/api/v1/auth/login', {
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),
@@ -58,7 +58,7 @@ export const useAuthStore = create<AuthState>((set) => ({
   },
   logout: async () => {
     try {
-      await fetch('/api/v1/auth/logout', { method: 'POST' });
+      await fetch(`${import.meta.env.VITE_API_BASE_URL}/auth/logout`, { method: 'POST' });
     } catch (error) {
       console.error('Logout error', error);
     } finally {
@@ -67,7 +67,7 @@ export const useAuthStore = create<AuthState>((set) => ({
   },
   checkAuth: async () => {
     try {
-      const response = await fetch('/api/v1/auth/me');
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/auth/me`);
       
       if (!response.ok) {
         throw new Error('Not authenticated');
