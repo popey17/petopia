@@ -33,12 +33,31 @@ export const register = async (req: Request, res: Response) => {
       },
     });
 
+    const secret = process.env.JWT_SECRET;
+    if (!secret) {
+      throw new Error('FATAL ERROR: JWT_SECRET environment variable is not defined.');
+    }
+    
+    // Create JWT token
+    const token = jwt.sign({ id: user.id, email: user.email }, secret, {
+      expiresIn: '7d',
+    });
+
+    // Set cookie
+    res.cookie('Jwt', token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+      maxAge: (24 * 60 * 60 * 1000) * 7,
+    });
+
     return res.status(201).json({
       message: 'User registered successfully',
       user: {
         id: user.id,
         email: user.email,
       },
+      token,
     });
   } catch (error) {
     console.error('Registration error:', error);

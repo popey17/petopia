@@ -2,7 +2,7 @@ import { create } from 'zustand';
 
 interface User {
   id: string;
-  name: string;
+  name?: string;
   email: string;
   avatar?: string;
   defaultPet?: {
@@ -11,6 +11,12 @@ interface User {
     displayName: string;
     avatar?: string;
   };
+  pets?: Array<{
+    id: string;
+    name: string;
+    displayName: string;
+    avatar?: string;
+  }>;
 }
 
 interface AuthState {
@@ -18,8 +24,10 @@ interface AuthState {
   isAuthenticated: boolean;
   isCheckingAuth: boolean;
   isLoggingIn: boolean;
+  isSigningUp: boolean;
   error: string | null;
   login: (email: string, password: string) => Promise<void>;
+  register: (email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
   checkAuth: () => Promise<void>;
 }
@@ -29,6 +37,7 @@ export const useAuthStore = create<AuthState>((set) => ({
   isAuthenticated: false,
   isCheckingAuth: true, // Start true while we check auth
   isLoggingIn: false,
+  isSigningUp: false,
   error: null,
   login: async (email, password) => {
     set({ isLoggingIn: true, error: null });
@@ -54,6 +63,34 @@ export const useAuthStore = create<AuthState>((set) => ({
       set({ 
         error: error instanceof Error ? error.message : 'An unexpected error occurred',
         isLoggingIn: false 
+      });
+      throw error;
+    }
+  },
+  register: async (email, password) => {
+    set({ isSigningUp: true, error: null });
+    try {
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/auth/register`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || 'Failed to register');
+      }
+
+      set({ 
+        user: data.user, 
+        isAuthenticated: true,
+        isSigningUp: false 
+      });
+    } catch (error: unknown) {
+      set({ 
+        error: error instanceof Error ? error.message : 'An unexpected error occurred',
+        isSigningUp: false 
       });
       throw error;
     }

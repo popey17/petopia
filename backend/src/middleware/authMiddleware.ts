@@ -21,6 +21,10 @@ export const authenticate = (req: AuthRequest, res: Response, next: NextFunction
       throw new Error('JWT_SECRET is not defined');
     }
 
+    if (!token) {
+      return res.status(401).json({ message: 'Authentication required' });
+    }
+
     const decoded = jwt.verify(token, secret) as { id: string; email: string };
     req.user = decoded;
     next();

@@ -5,6 +5,7 @@ import App from './App';
 import Login from './pages/Login/Login';
 import Dashboard from './pages/Dashboard/Dashboard';
 import Profile from './pages/Profile/Profile';
+import Register from './pages/Register/Register';
 import './assets/scss/root/global.scss';
 import GuestRoute from './utils/GuestRoute';
 
@@ -17,9 +18,9 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
         <Route element={<RootLayout />}>
           <Route path="/" element={<App />}>
             <Route index element={<Dashboard />} />
-            <Route path="profile" element={<Navigate to="/" replace />} />
             <Route path=":petName" element={<Profile />} />
           </Route>
+          <Route path="/signup" element={<Register />} />
           <Route element={<GuestRoute />}>
             <Route path="/login" element={<Login />} />
           </Route>

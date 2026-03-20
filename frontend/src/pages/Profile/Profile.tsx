@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { MapPin, Calendar, Grid, Camera, Heart, MessageCircle } from 'lucide-react';
-import styles from './Profile.module.scss';
+import styles from '../../assets/scss/pages/Profile.module.scss';
 import PostDetail from '../../components/PostDetail/PostDetail';
 
 interface PetProfile {
