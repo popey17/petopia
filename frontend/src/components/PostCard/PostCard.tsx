@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { Heart, MessageCircle, MoreHorizontal } from 'lucide-react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination } from 'swiper/modules';
+import { usePostStore } from '../../stores/usePostStore';
 import styles from './PostCard.module.scss';
 
 // Import Swiper styles
@@ -21,10 +22,28 @@ interface PostCardProps {
       displayName: string;
       avatar: string | null;
     };
+    _count: {
+      likes: number;
+    };
+    isLiked: boolean;
   };
 }
 
 const PostCard: React.FC<PostCardProps> = ({ post }) => {
+  const { likePost, unlikePost } = usePostStore();
+
+  const handleLike = async () => {
+    try {
+      if (post.isLiked) {
+        await unlikePost(post.id);
+      } else {
+        await likePost(post.id);
+      }
+    } catch (error) {
+      console.error('Failed to toggle like:', error);
+    }
+  };
+
   return (
     <article className={styles.postCard}>
       <header className={styles.header}>
@@ -61,13 +80,20 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
 
       <div className={styles.actions}>
         <div className={styles.leftActions}>
-          <button><Heart size={24} /></button>
+          <button 
+            onClick={handleLike}
+            className={post.isLiked ? styles.liked : ''}
+          >
+            <Heart size={24} />
+          </button>
           <button><MessageCircle size={24} /></button>
         </div>
       </div>
 
       <div className={styles.content}>
-        <div className={styles.likes}>0 likes</div>
+        <div className={styles.likes}>
+          {post._count.likes} {post._count.likes === 1 ? 'like' : 'likes'}
+        </div>
         <div className={styles.caption}>
           <Link to={`/${post.pet.name}`} className={styles.petName}>
             {post.pet.name}

@@ -362,6 +362,11 @@
         color: $primary-pink;
         transform: scale(1.1);
       }
+
+      &.liked {
+        color: $primary-pink;
+        fill: $primary-pink;
+      }
     }
   }
 

@@ -109,15 +109,37 @@ export const getPetPosts = async (req: AuthRequest, res: Response) => {
       return res.status(400).json({ message: 'petId is required' });
     }
 
+    const userId = (req as any).user?.id;
+    let defaultPetId: string | null = null;
+    if (userId) {
+      const user = await prisma.user.findUnique({
+        where: { id: userId },
+        select: { defaultPetId: true },
+      });
+      defaultPetId = user?.defaultPetId || null;
+    }
+
     const posts = await prisma.post.findMany({
       where: { petId },
       include: {
         images: true,
+        _count: {
+          select: { likes: true },
+        },
+        likes: defaultPetId ? {
+          where: { petId: defaultPetId },
+        } : false,
       },
       orderBy: { createdAt: 'desc' },
     });
 
-    return res.status(200).json(posts);
+    const postsWithIsLiked = posts.map(post => ({
+      ...post,
+      isLiked: (post as any).likes?.length > 0,
+      likes: undefined, // Remove the likes array from the response
+    }));
+
+    return res.status(200).json(postsWithIsLiked);
   } catch (error) {
     console.error('Get pet posts error:', error);
     return res.status(500).json({ message: 'Internal server error' });
@@ -127,6 +149,16 @@ export const getPetPosts = async (req: AuthRequest, res: Response) => {
 export const getPost = async (req: AuthRequest, res: Response) => {
   try {
     const postId = req.params.postId as string;
+
+    const userId = (req as any).user?.id;
+    let defaultPetId: string | null = null;
+    if (userId) {
+      const user = await prisma.user.findUnique({
+        where: { id: userId },
+        select: { defaultPetId: true },
+      });
+      defaultPetId = user?.defaultPetId || null;
+    }
 
     const post = await prisma.post.findUnique({
       where: { id: postId },
@@ -140,6 +172,12 @@ export const getPost = async (req: AuthRequest, res: Response) => {
             ownerId: true,
           },
         },
+        _count: {
+          select: { likes: true },
+        },
+        likes: defaultPetId ? {
+          where: { petId: defaultPetId },
+        } : false,
       },
     });
 
@@ -147,7 +185,13 @@ export const getPost = async (req: AuthRequest, res: Response) => {
       return res.status(404).json({ message: 'Post not found' });
     }
 
-    return res.status(200).json(post);
+    const postWithIsLiked = {
+      ...post,
+      isLiked: (post as any).likes?.length > 0,
+      likes: undefined,
+    };
+
+    return res.status(200).json(postWithIsLiked);
   } catch (error) {
     console.error('Get post error:', error);
     return res.status(500).json({ message: 'Internal server error' });
@@ -316,11 +360,23 @@ export const getFollowingPosts = async (req: AuthRequest, res: Response) => {
             avatar: true,
           },
         },
+        _count: {
+          select: { likes: true },
+        },
+        likes: {
+          where: { petId: user.defaultPetId },
+        },
       },
       orderBy: { createdAt: 'desc' },
     });
 
-    return res.status(200).json(posts);
+    const postsWithIsLiked = posts.map(post => ({
+      ...post,
+      isLiked: post.likes.length > 0,
+      likes: undefined,
+    }));
+
+    return res.status(200).json(postsWithIsLiked);
   } catch (error) {
     console.error('Get following posts error:', error);
     return res.status(500).json({ message: 'Internal server error' });

@@ -1,0 +1,13 @@
+model Like {
+  id        String   @id @default(uuid()) @db.Uuid
+  postId    String   @db.Uuid
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  
+  petId     String   @db.Uuid
+  pet       Pet      @relation(fields: [petId], references: [id], onDelete: Cascade)
+  
+  createdAt DateTime @default(now())
+
+  @@unique([postId, petId])
+  @@map("likes")
+}

@@ -9,6 +9,8 @@ interface PostState {
   createPost: (formData: FormData) => Promise<void>;
   updatePost: (postId: string, formData: FormData) => Promise<void>;
   deletePost: (postId: string) => Promise<void>;
+  likePost: (postId: string) => Promise<void>;
+  unlikePost: (postId: string) => Promise<void>;
   version: number;
   triggerRefresh: () => void;
 }
@@ -93,6 +95,40 @@ export const usePostStore = create<PostState>((set) => ({
         error: error instanceof Error ? error.message : 'An unexpected error occurred',
         isSubmitting: false 
       });
+      throw error;
+    }
+  },
+  likePost: async (postId: string) => {
+    try {
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/posts/${postId}/like`, {
+        method: 'POST',
+      });
+
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.message || 'Failed to like post');
+      }
+
+      set((state) => ({ version: state.version + 1 }));
+    } catch (error) {
+      console.error('Like error:', error);
+      throw error;
+    }
+  },
+  unlikePost: async (postId: string) => {
+    try {
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/posts/${postId}/like`, {
+        method: 'DELETE',
+      });
+
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.message || 'Failed to unlike post');
+      }
+
+      set((state) => ({ version: state.version + 1 }));
+    } catch (error) {
+      console.error('Unlike error:', error);
       throw error;
     }
   },

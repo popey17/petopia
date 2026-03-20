@@ -31,6 +31,9 @@ interface Post {
   caption: string | null;
   images: { url: string }[];
   createdAt: string;
+  _count: {
+    likes: number;
+  };
 }
 
 const Profile: React.FC = () => {
@@ -184,7 +187,7 @@ const Profile: React.FC = () => {
             >
               <img src={post.images[0]?.url} alt={post.caption || 'Pet post'} />
               <div className={styles.overlay}>
-                <span><Heart size={20} fill="white" /> 0</span>
+                <span><Heart size={20} fill="white" /> {post._count.likes}</span>
                 <span><MessageCircle size={20} fill="white" /> 0</span>
               </div>
             </div>

@@ -17,6 +17,7 @@ model Pet {
   defaultFor User? @relation("defaultPet")
 
   posts Post[]
+  likes Like[]
   followers Follow[] @relation("petFollowers")
   following Follow[] @relation("petFollowing")
 

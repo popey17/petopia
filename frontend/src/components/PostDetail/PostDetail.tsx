@@ -29,6 +29,10 @@ interface DetailedPost {
     avatar: string | null;
     ownerId: string;
   };
+  _count: {
+    likes: number;
+  };
+  isLiked: boolean;
 }
 
 const PostDetail: React.FC<PostDetailProps> = ({ postId, onClose }) => {
@@ -38,7 +42,30 @@ const PostDetail: React.FC<PostDetailProps> = ({ postId, onClose }) => {
   const [error, setError] = useState<string | null>(null);
   
   const { user } = useAuthStore();
-  const { deletePost, isSubmitting } = usePostStore();
+  const { deletePost, isSubmitting, likePost, unlikePost } = usePostStore();
+
+  const handleLike = async () => {
+    if (!post) return;
+    try {
+      if (post.isLiked) {
+        await unlikePost(post.id);
+        setPost({
+          ...post,
+          isLiked: false,
+          _count: { likes: post._count.likes - 1 }
+        });
+      } else {
+        await likePost(post.id);
+        setPost({
+          ...post,
+          isLiked: true,
+          _count: { likes: post._count.likes + 1 }
+        });
+      }
+    } catch (err) {
+      console.error('Failed to toggle like:', err);
+    }
+  };
   
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
@@ -183,11 +210,16 @@ const PostDetail: React.FC<PostDetailProps> = ({ postId, onClose }) => {
 
             <div className={styles.footer}>
               <div className={styles.actions}>
-                <button><Heart size={24} /></button>
+                <button 
+                  onClick={handleLike}
+                  className={post.isLiked ? styles.liked : ''}
+                >
+                  <Heart size={24} />
+                </button>
                 <button><MessageCircle size={24} /></button>
               </div>
               <div className={styles.likeStats}>
-                <strong>0 likes</strong>
+                <strong>{post._count.likes} {post._count.likes === 1 ? 'like' : 'likes'}</strong>
               </div>
               <div className={styles.addComment}>
                 <input type="text" placeholder="Add a comment..." className={styles.commentInput} />

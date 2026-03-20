@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import styles from '../../assets/scss/pages/App.module.scss';
 import PostCard from '../../components/PostCard/PostCard';
+import { usePostStore } from '../../stores/usePostStore';
 
 interface Post {
   id: string;
@@ -13,12 +14,17 @@ interface Post {
     displayName: string;
     avatar: string | null;
   };
+  _count: {
+    likes: number;
+  };
+  isLiked: boolean;
 }
 
 const Dashboard: React.FC = () => {
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const { version } = usePostStore();
 
   useEffect(() => {
     const fetchFeed = async () => {
@@ -36,7 +42,7 @@ const Dashboard: React.FC = () => {
     };
 
     fetchFeed();
-  }, []);
+  }, [version]);
 
   return (
     <>

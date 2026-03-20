@@ -115,6 +115,11 @@
           color: variables.$primary-pink;
           transform: scale(1.1);
         }
+
+        &.liked {
+          color: variables.$primary-pink;
+          fill: variables.$primary-pink;
+        }
       }
     }
   }

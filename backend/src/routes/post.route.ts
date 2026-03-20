@@ -7,6 +7,7 @@ import {
   updatePost, 
   getFollowingPosts 
 } from '../controllers/postController';
+import { likePost, unlikePost } from '../controllers/likeController';
 import { authenticate } from '../middleware/authMiddleware';
 import { upload } from '../middleware/uploadMiddleware';
 
@@ -29,5 +30,9 @@ router.delete('/:postId', authenticate, deletePost);
 
 // Update a post
 router.patch('/:postId', authenticate, upload.array('images', 10), updatePost);
+
+// Like/Unlike a post
+router.post('/:postId/like', authenticate, likePost);
+router.delete('/:postId/like', authenticate, unlikePost);
 
 export default router;

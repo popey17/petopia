@@ -3,6 +3,8 @@ model Post {
   caption   String?
   images    PostImage[] 
   
+  likes     Like[]
+  
   petId     String      @db.Uuid
   pet       Pet         @relation(fields: [petId], references: [id], onDelete: Cascade)
 
