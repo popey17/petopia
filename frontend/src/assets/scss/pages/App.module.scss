@@ -45,6 +45,24 @@
         }
       }
 
+      .feed {
+        display: flex;
+        flex-direction: column;
+        gap: 0;
+        max-width: 600px;
+        margin: 0 auto;
+
+        @media (max-width: variables.$breakpoint-mobile) {
+          max-width: 100%;
+        }
+      }
+
+      .error {
+        color: variables.$error-red;
+        text-align: center;
+        padding: 20px;
+      }
+
       .placeholder-grid {
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));

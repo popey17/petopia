@@ -1,5 +1,12 @@
 import { Router } from 'express';
-import { createPost, getPetPosts, getPost, deletePost, updatePost } from '../controllers/postController';
+import { 
+  createPost, 
+  getPetPosts, 
+  getPost, 
+  deletePost, 
+  updatePost, 
+  getFollowingPosts 
+} from '../controllers/postController';
 import { authenticate } from '../middleware/authMiddleware';
 import { upload } from '../middleware/uploadMiddleware';
 
@@ -7,6 +14,9 @@ const router = Router();
 
 // Post images for a pet (up to 10 images)
 router.post('/', authenticate, upload.array('images', 10), createPost);
+
+// Get following feed
+router.get('/feed', authenticate, getFollowingPosts);
 
 // Get all posts for a pet
 router.get('/pet/:petId', getPetPosts);

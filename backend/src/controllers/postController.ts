@@ -271,3 +271,58 @@ export const updatePost = async (req: AuthRequest, res: Response) => {
     return res.status(500).json({ message: 'Internal server error' });
   }
 };
+
+export const getFollowingPosts = async (req: AuthRequest, res: Response) => {
+  try {
+    const userId = req.user?.id;
+    if (!userId) {
+      return res.status(401).json({ message: 'User not authenticated' });
+    }
+
+    // Get current user's default pet
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: { defaultPetId: true },
+    });
+
+    if (!user?.defaultPetId) {
+      return res.status(200).json([]); // No pet, no followings
+    }
+
+    // Get the IDs of the pets the user's default pet is following
+    const following = await prisma.follow.findMany({
+      where: { followerId: user.defaultPetId },
+      select: { followingId: true },
+    });
+
+    const followingPetIds = following.map((f) => f.followingId);
+
+    if (followingPetIds.length === 0) {
+      return res.status(200).json([]); // Not following anyone
+    }
+
+    // Get posts from those pets
+    const posts = await prisma.post.findMany({
+      where: {
+        petId: { in: followingPetIds },
+      },
+      include: {
+        images: true,
+        pet: {
+          select: {
+            id: true,
+            name: true,
+            displayName: true,
+            avatar: true,
+          },
+        },
+      },
+      orderBy: { createdAt: 'desc' },
+    });
+
+    return res.status(200).json(posts);
+  } catch (error) {
+    console.error('Get following posts error:', error);
+    return res.status(500).json({ message: 'Internal server error' });
+  }
+};
