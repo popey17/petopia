@@ -31,16 +31,28 @@ interface PostCardProps {
 
 const PostCard: React.FC<PostCardProps> = ({ post }) => {
   const { likePost, unlikePost } = usePostStore();
+  const [isLiked, setIsLiked] = React.useState(post.isLiked);
+  const [likesCount, setLikesCount] = React.useState(post._count.likes);
 
   const handleLike = async () => {
+    // Optimistic update
+    const previousIsLiked = isLiked;
+    const previousLikesCount = likesCount;
+
+    setIsLiked(!previousIsLiked);
+    setLikesCount(previousIsLiked ? previousLikesCount - 1 : previousLikesCount + 1);
+
     try {
-      if (post.isLiked) {
+      if (previousIsLiked) {
         await unlikePost(post.id);
       } else {
         await likePost(post.id);
       }
     } catch (error) {
       console.error('Failed to toggle like:', error);
+      // Revert if failed
+      setIsLiked(previousIsLiked);
+      setLikesCount(previousLikesCount);
     }
   };
 
@@ -82,7 +94,7 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
         <div className={styles.leftActions}>
           <button 
             onClick={handleLike}
-            className={post.isLiked ? styles.liked : ''}
+            className={isLiked ? styles.liked : ''}
           >
             <Heart size={24} />
           </button>
@@ -92,7 +104,7 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
 
       <div className={styles.content}>
         <div className={styles.likes}>
-          {post._count.likes} {post._count.likes === 1 ? 'like' : 'likes'}
+          {likesCount} {likesCount === 1 ? 'like' : 'likes'}
         </div>
         <div className={styles.caption}>
           <Link to={`/${post.pet.name}`} className={styles.petName}>

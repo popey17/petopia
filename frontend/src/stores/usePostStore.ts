@@ -11,7 +11,7 @@ interface PostState {
   deletePost: (postId: string) => Promise<void>;
   likePost: (postId: string) => Promise<void>;
   unlikePost: (postId: string) => Promise<void>;
-  version: number;
+  majorVersion: number;
   triggerRefresh: () => void;
 }
 
@@ -19,8 +19,8 @@ export const usePostStore = create<PostState>((set) => ({
   isModalOpen: false,
   isSubmitting: false,
   error: null,
-  version: 0,
-  triggerRefresh: () => set((state) => ({ version: state.version + 1 })),
+  majorVersion: 0,
+  triggerRefresh: () => set((state) => ({ majorVersion: state.majorVersion + 1 })),
   openModal: () => set({ isModalOpen: true, error: null }),
   closeModal: () => set({ isModalOpen: false, error: null }),
   createPost: async (formData: FormData) => {
@@ -40,7 +40,7 @@ export const usePostStore = create<PostState>((set) => ({
       set((state) => ({ 
         isSubmitting: false,
         isModalOpen: false,
-        version: state.version + 1
+        majorVersion: state.majorVersion + 1
       }));
       
       // Success - could trigger a refresh here if needed
@@ -108,8 +108,6 @@ export const usePostStore = create<PostState>((set) => ({
         const data = await response.json();
         throw new Error(data.message || 'Failed to like post');
       }
-
-      set((state) => ({ version: state.version + 1 }));
     } catch (error) {
       console.error('Like error:', error);
       throw error;
@@ -125,8 +123,6 @@ export const usePostStore = create<PostState>((set) => ({
         const data = await response.json();
         throw new Error(data.message || 'Failed to unlike post');
       }
-
-      set((state) => ({ version: state.version + 1 }));
     } catch (error) {
       console.error('Unlike error:', error);
       throw error;

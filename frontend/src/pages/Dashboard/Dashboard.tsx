@@ -24,7 +24,7 @@ const Dashboard: React.FC = () => {
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const { version } = usePostStore();
+  const { majorVersion } = usePostStore();
 
   useEffect(() => {
     const fetchFeed = async () => {
@@ -42,7 +42,7 @@ const Dashboard: React.FC = () => {
     };
 
     fetchFeed();
-  }, [version]);
+  }, [majorVersion]);
 
   return (
     <>
@@ -74,6 +74,7 @@ const Dashboard: React.FC = () => {
             <div className={styles.error}>{error}</div>
           ) : (
             posts.map((post) => (
+              console.log(post),
               <PostCard key={post.id} post={post} />
             ))
           )}

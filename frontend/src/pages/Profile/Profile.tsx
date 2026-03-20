@@ -44,7 +44,7 @@ const Profile: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [selectedPostId, setSelectedPostId] = useState<string | null>(null);
   const { user } = useAuthStore();
-  const { version, triggerRefresh } = usePostStore();
+  const { majorVersion, triggerRefresh } = usePostStore();
   const [followLoading, setFollowLoading] = useState(false);
   const [followModal, setFollowModal] = useState<'followers' | 'following' | null>(null);
 
@@ -100,7 +100,7 @@ const Profile: React.FC = () => {
     };
 
     fetchProfile();
-  }, [petName, version]);
+  }, [petName, majorVersion]);
 
   if (loading) {
     return <div className={styles.loading}>Loading profile...</div>;
