@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { createPost, getPetPosts, getPost, deletePost } from '../controllers/postController';
+import { createPost, getPetPosts, getPost, deletePost, updatePost } from '../controllers/postController';
 import { authenticate } from '../middleware/authMiddleware';
 import { upload } from '../middleware/uploadMiddleware';
 
@@ -16,5 +16,8 @@ router.get('/:postId', getPost);
 
 // Delete a post
 router.delete('/:postId', authenticate, deletePost);
+
+// Update a post
+router.patch('/:postId', authenticate, upload.array('images', 10), updatePost);
 
 export default router;

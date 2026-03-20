@@ -1,8 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { X, Heart, MessageCircle } from 'lucide-react';
+import { X, Heart, MessageCircle, MoreVertical, Pencil, Trash } from 'lucide-react';
+import { useAuthStore } from '../../stores/useAuthStore';
+import { usePostStore } from '../../stores/usePostStore';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination } from 'swiper/modules';
 import styles from './PostDetail.module.scss';
+import EditPostModal from './EditPostModal';
+import DeleteConfirmModal from './DeleteConfirmModal';
 
 // Import Swiper styles
 import 'swiper/css';
@@ -23,6 +27,7 @@ interface DetailedPost {
     name: string;
     displayName: string;
     avatar: string | null;
+    ownerId: string;
   };
 }
 
@@ -31,6 +36,13 @@ const PostDetail: React.FC<PostDetailProps> = ({ postId, onClose }) => {
   const [loading, setLoading] = useState(true);
   const [imageLoaded, setImageLoaded] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  
+  const { user } = useAuthStore();
+  const { deletePost, isSubmitting } = usePostStore();
+  
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
 
   useEffect(() => {
     const fetchPostDetail = async () => {
@@ -50,6 +62,20 @@ const PostDetail: React.FC<PostDetailProps> = ({ postId, onClose }) => {
     fetchPostDetail();
   }, [postId]);
 
+  const handleDelete = async () => {
+    try {
+      await deletePost(postId);
+      onClose();
+    } catch (err) {
+      console.error('Delete error:', err);
+    }
+  };
+
+  const handleUpdateSuccess = (updatedPost: DetailedPost) => {
+    setPost(updatedPost);
+    setShowEditModal(false);
+  };
+
   if (error || (!loading && !post)) {
     return (
       <div className={styles.overlay} onClick={onClose}>
@@ -62,6 +88,7 @@ const PostDetail: React.FC<PostDetailProps> = ({ postId, onClose }) => {
 
   // We hide everything until the image is loaded to provide a seamless appearance
   const isVisible = post && imageLoaded && !loading;
+  const isOwner = user && post && user.id === post.pet.ownerId;
 
   return (
     <div className={`${styles.overlay} ${!isVisible ? styles.transparentOverlay : ''}`} onClick={onClose}>
@@ -113,6 +140,20 @@ const PostDetail: React.FC<PostDetailProps> = ({ postId, onClose }) => {
                   <span>@{post.pet.name}</span>
                 </div>
               </div>
+
+              {isOwner && (
+                <div className={styles.optionsWrapper}>
+                  <button className={styles.optionsBtn} onClick={() => setIsMenuOpen(!isMenuOpen)}>
+                    <MoreVertical size={20} />
+                  </button>
+                  {isMenuOpen && (
+                    <div className={styles.dropdown}>
+                      <button onClick={() => { setShowEditModal(true); setIsMenuOpen(false); }}><Pencil size={16} /> Edit</button>
+                      <button onClick={() => { setShowDeleteConfirm(true); setIsMenuOpen(false); }} className={styles.danger}><Trash size={16} /> Delete</button>
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
 
             <div className={styles.body}>
@@ -155,6 +196,22 @@ const PostDetail: React.FC<PostDetailProps> = ({ postId, onClose }) => {
             </div>
           </div>
         </div>
+      )}
+
+      {showDeleteConfirm && (
+        <DeleteConfirmModal 
+          onConfirm={handleDelete}
+          onCancel={() => setShowDeleteConfirm(false)}
+          isLoading={isSubmitting}
+        />
+      )}
+
+      {showEditModal && post && (
+        <EditPostModal 
+          post={post}
+          onClose={() => setShowEditModal(false)}
+          onSuccess={handleUpdateSuccess}
+        />
       )}
     </div>
   );

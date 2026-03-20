@@ -1,0 +1,42 @@
+@use '../root/variables.scss' as variables;
+
+.CreatePostButton {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  background: linear-gradient(135deg, variables.$primary-pink, variables.$primary-pink-dark);
+  color: variables.$white;
+  border: none;
+  border-radius: variables.$radius-full;
+  padding: 12px 24px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 700;
+  font-size: 16px;
+  box-shadow: variables.$shadow-hard;
+  cursor: pointer;
+  z-index: variables.$z-modal;
+  transition: variables.$transition-smooth;
+
+  .text {
+    display: inline;
+  }
+
+  // Mobile behavior
+  @media (max-width: variables.$breakpoint-mobile) {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    bottom: auto;
+    padding: 10px;
+    width: 44px;
+    height: 44px;
+    justify-content: center;
+    box-shadow: variables.$shadow-soft;
+
+    .text {
+      display: none;
+    }
+  }
+}

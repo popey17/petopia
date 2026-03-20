@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import { MapPin, Calendar, Grid, Camera, Heart, MessageCircle } from 'lucide-react';
 import styles from '../../assets/scss/pages/Profile.module.scss';
 import PostDetail from '../../components/PostDetail/PostDetail';
+import { usePostStore } from '../../stores/usePostStore';
 
 interface PetProfile {
   id: string;
@@ -34,11 +35,14 @@ const Profile: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [selectedPostId, setSelectedPostId] = useState<string | null>(null);
+  const { version } = usePostStore();
 
   useEffect(() => {
     const fetchProfile = async () => {
       if (!petName) return;
       setLoading(true);
+      setError(null);
+      setPet(null);
       try {
         const petRes = await fetch(`${import.meta.env.VITE_API_BASE_URL}/pets/${petName}`);
         if (!petRes.ok) throw new Error('Pet not found');
@@ -58,7 +62,7 @@ const Profile: React.FC = () => {
     };
 
     fetchProfile();
-  }, [petName]);
+  }, [petName, version]);
 
   if (loading) {
     return <div className={styles.loading}>Loading profile...</div>;

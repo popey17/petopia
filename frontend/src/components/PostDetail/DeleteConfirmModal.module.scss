@@ -1,0 +1,132 @@
+@use '../../assets/scss/root/variables.scss' as *;
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(4px);
+  z-index: $z-modal + 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  animation: fadeIn 0.2s ease-out;
+}
+
+.modal {
+  background: $card-bg;
+  border-radius: $radius-lg;
+  width: 100%;
+  max-width: 400px;
+  padding: 32px;
+  text-align: center;
+  position: relative;
+  box-shadow: $shadow-hard;
+  animation: scaleUp 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  h2 {
+    font-size: 1.5rem;
+    color: $text-main;
+    margin: 16px 0 8px;
+    font-weight: 700;
+  }
+
+  p {
+    font-size: 0.95rem;
+    color: $text-muted;
+    line-height: 1.5;
+    margin-bottom: 24px;
+  }
+}
+
+.closeBtn {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: none;
+  border: none;
+  color: $text-muted;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 50%;
+  transition: $transition-smooth;
+
+  &:hover {
+    background: rgba($primary-pink, 0.05);
+    color: $primary-pink;
+  }
+}
+
+.iconWrapper {
+  display: flex;
+  justify-content: center;
+  
+  .alertIcon {
+    color: #ff4d4d;
+    background: rgba(#ff4d4d, 0.1);
+    padding: 12px;
+    border-radius: 50%;
+  }
+}
+
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  button {
+    width: 100%;
+    padding: 14px;
+    border-radius: $radius-full;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: $transition-smooth;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .deleteBtn {
+    background: #ff4d4d;
+    color: $white;
+    border: none;
+
+    &:hover:not(:disabled) {
+      background: darken(#ff4d4d, 10%);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(#ff4d4d, 0.3);
+    }
+  }
+
+  .cancelBtn {
+    background: transparent;
+    color: $text-muted;
+    border: 1px solid $border-color;
+
+    &:hover:not(:disabled) {
+      background: $bg-color;
+      color: $text-main;
+      border-color: $text-muted;
+    }
+  }
+
+  button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes scaleUp {
+  from { opacity: 0; transform: scale(0.9); }
+  to { opacity: 1; transform: scale(1); }
+}

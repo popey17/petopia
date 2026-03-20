@@ -1,0 +1,312 @@
+@use '../root/variables.scss' as variables;
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: variables.$z-modal;
+  padding: 20px;
+}
+
+.modal {
+  background: variables.$white;
+  width: 100%;
+  max-width: 600px;
+  border-radius: variables.$radius-xl;
+  box-shadow: variables.$shadow-hover;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  max-height: 90vh;
+}
+
+.header {
+  padding: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid variables.$border-color;
+
+  h2 {
+    font-size: 22px;
+    font-weight: 800;
+    margin: 0;
+    color: variables.$text-main;
+  }
+
+  .close-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: variables.$text-muted;
+    padding: 8px;
+    border-radius: variables.$radius-full;
+    transition: variables.$transition-smooth;
+
+    &:hover {
+      background: variables.$bg-color;
+      color: variables.$primary-pink;
+    }
+  }
+}
+
+.form {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  overflow-y: auto;
+
+  .field {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    label {
+      font-weight: 700;
+      font-size: 14px;
+      color: variables.$text-main;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+  }
+
+  .pet-selector {
+    display: flex;
+    gap: 12px;
+    overflow-x: auto;
+    padding: 4px;
+    padding-bottom: 12px;
+
+    &::-webkit-scrollbar {
+      height: 4px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: variables.$border-color;
+      border-radius: 2px;
+    }
+
+    .pet-option {
+      flex: 0 0 auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      padding: 8px;
+      border-radius: variables.$radius-md;
+      border: 2px solid transparent;
+      transition: variables.$transition-smooth;
+
+      &:hover {
+        background: variables.$bg-color;
+      }
+
+      &.selected {
+        border-color: variables.$primary-pink;
+        background: rgba(255, 133, 161, 0.05);
+      }
+
+      img {
+        width: 60px;
+        height: 60px;
+        border-radius: variables.$radius-full;
+        object-fit: cover;
+        box-shadow: variables.$shadow-soft;
+      }
+
+      span {
+        font-size: 12px;
+        font-weight: 600;
+        color: variables.$text-main;
+      }
+    }
+  }
+
+  .upload-area {
+    border: 2px dashed variables.$border-color;
+    border-radius: variables.$radius-lg;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    transition: variables.$transition-smooth;
+    text-align: center;
+
+    &:hover {
+      border-color: variables.$primary-pink;
+      background: rgba(255, 133, 161, 0.02);
+    }
+
+    .icon-wrapper {
+      width: 48px;
+      height: 48px;
+      background: variables.$bg-color;
+      border-radius: variables.$radius-full;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: variables.$primary-pink;
+    }
+
+    p {
+      margin: 0;
+      color: variables.$text-muted;
+      font-size: 14px;
+    }
+
+    input {
+      display: none;
+    }
+  }
+
+  .preview-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: 12px;
+
+    .preview-item {
+      position: relative;
+      aspect-ratio: 1;
+      border-radius: variables.$radius-md;
+      overflow: hidden;
+      box-shadow: variables.$shadow-soft;
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .remove-btn {
+        position: absolute;
+        top: 4px;
+        right: 4px;
+        background: rgba(0, 0, 0, 0.5);
+        color: white;
+        border: none;
+        border-radius: variables.$radius-full;
+        width: 20px;
+        height: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        padding: 0;
+        transition: variables.$transition-smooth;
+
+        &:hover {
+          background: variables.$primary-pink-dark;
+        }
+      }
+    }
+  }
+
+  textarea {
+    width: 100%;
+    min-height: 120px;
+    padding: 16px;
+    border: 1px solid variables.$border-color;
+    border-radius: variables.$radius-lg;
+    font-family: inherit;
+    font-size: 16px;
+    resize: none;
+    transition: variables.$transition-smooth;
+    background: variables.$bg-color;
+
+    &:focus {
+      outline: none;
+      border-color: variables.$primary-pink;
+      box-shadow: 0 0 0 4px rgba(255, 133, 161, 0.1);
+      background: variables.$white;
+    }
+
+    &::placeholder {
+      color: variables.$text-muted;
+    }
+  }
+}
+
+.footer {
+  padding: 24px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  border-top: 1px solid variables.$border-color;
+
+  button {
+    padding: 12px 32px;
+    border-radius: variables.$radius-full;
+    font-weight: 700;
+    font-size: 16px;
+    cursor: pointer;
+    transition: variables.$transition-smooth;
+  }
+
+  .cancel-btn {
+    background: none;
+    border: none;
+    color: variables.$text-muted;
+
+    &:hover {
+      background: variables.$bg-color;
+      color: variables.$text-main;
+    }
+  }
+
+  .submit-btn {
+    background: linear-gradient(135deg, variables.$primary-pink, variables.$primary-pink-dark);
+    color: variables.$white;
+    border: none;
+    box-shadow: variables.$shadow-soft;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    &:hover {
+      box-shadow: variables.$shadow-hover;
+      transform: translateY(-2px);
+    }
+
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+  }
+}
+
+.error-message {
+  color: #ff4d4d;
+  font-size: 14px;
+  font-weight: 600;
+  text-align: center;
+  padding: 10px;
+  background: rgba(255, 77, 77, 0.05);
+  border-radius: variables.$radius-sm;
+}
+
+// Mobile specific tweaks
+@media (max-width: variables.$breakpoint-mobile) {
+  .modal {
+    max-height: 100vh;
+    border-radius: 0;
+    max-width: 100%;
+    height: 100%;
+  }
+
+  .overlay {
+    padding: 0;
+  }
+}

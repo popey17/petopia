@@ -137,6 +137,7 @@ export const getPost = async (req: AuthRequest, res: Response) => {
             name: true,
             displayName: true,
             avatar: true,
+            ownerId: true,
           },
         },
       },
@@ -190,6 +191,83 @@ export const deletePost = async (req: AuthRequest, res: Response) => {
     return res.status(200).json({ message: 'Post deleted successfully' });
   } catch (error) {
     console.error('Delete post error:', error);
+    return res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+export const updatePost = async (req: AuthRequest, res: Response) => {
+  try {
+    const postId = req.params.postId as string;
+    const { caption, removedImageUrls } = req.body;
+    const newFiles = req.files as Express.Multer.File[];
+
+    if (!req.user) {
+      return res.status(401).json({ message: 'User not authenticated' });
+    }
+
+    // Check if the post exists and user owns it (via pet ownership)
+    const post = await prisma.post.findUnique({
+      where: { id: postId },
+      include: {
+        pet: true,
+        images: true,
+      },
+    });
+
+    if (!post) {
+      return res.status(404).json({ message: 'Post not found' });
+    }
+
+    if (post.pet.ownerId !== req.user.id) {
+      return res.status(403).json({ message: 'You do not have permission to update this post' });
+    }
+
+    // Handle removed images
+    if (removedImageUrls) {
+      const urlsToRemove = Array.isArray(removedImageUrls) ? removedImageUrls : [removedImageUrls];
+      
+      // Delete from R2
+      const deletePromises = urlsToRemove.map((url) => deleteFromR2(url));
+      await Promise.all(deletePromises);
+
+      // Delete from Database
+      await prisma.postImage.deleteMany({
+        where: {
+          postId,
+          url: { in: urlsToRemove },
+        },
+      });
+    }
+
+    // Handle new images
+    let newImageUrls: string[] = [];
+    if (newFiles && newFiles.length > 0) {
+      const uploadPromises = newFiles.map((file) => uploadToR2(file));
+      newImageUrls = await Promise.all(uploadPromises);
+    }
+
+    // Update post caption and add new images
+    const updatedPost = await prisma.post.update({
+      where: { id: postId },
+      data: { 
+        caption,
+        images: {
+          create: newImageUrls.map((url) => ({
+            url,
+          })),
+        },
+      },
+      include: {
+        images: true,
+      },
+    });
+
+    return res.status(200).json({
+      message: 'Post updated successfully',
+      post: updatedPost,
+    });
+  } catch (error) {
+    console.error('Update post error:', error);
     return res.status(500).json({ message: 'Internal server error' });
   }
 };

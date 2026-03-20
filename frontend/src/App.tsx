@@ -4,6 +4,8 @@ import styles from './assets/scss/pages/App.module.scss';
 
 import { useUIStore } from './stores/useUIStore';
 import { useAuthStore } from './stores/useAuthStore';
+import CreatePostButton from './components/PostCreation/CreatePostButton';
+import CreatePostModal from './components/PostCreation/CreatePostModal';
 
 function App() {
   const { sidebarCollapsed } = useUIStore();
@@ -19,6 +21,10 @@ function App() {
       <main className={styles.main}>
         <Outlet />
       </main>
+      
+      {/* Post Creation Feature */}
+      <CreatePostButton />
+      <CreatePostModal />
     </div>
   );
 }
