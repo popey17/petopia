@@ -75,27 +75,55 @@ export const getPetProfile = async (req: AuthRequest, res: Response) => {
       return res.status(400).json({ message: 'Pet name is required' });
     }
 
-    const pet = await prisma.pet.findUnique({
-      where: { name },
-      include: {
-        owner: {
-          select: {
-            email: true,
-          },
-        },
-        _count: {
-          select: {
-            posts: true,
-          },
+    const includeOptions: any = {
+      owner: {
+        select: {
+          id: true,
+          email: true,
         },
       },
+      _count: {
+        select: {
+          posts: true,
+          followers: true,
+          following: true,
+        },
+      },
+    };
+
+    if (req.user) {
+      includeOptions.followers = {
+        where: {
+          follower: {
+            ownerId: req.user.id
+          }
+        },
+        include: {
+          follower: {
+            select: {
+              id: true
+            }
+          }
+        }
+      };
+    }
+
+    const pet = await prisma.pet.findUnique({
+      where: { name },
+      include: includeOptions,
     });
 
     if (!pet) {
       return res.status(404).json({ message: 'Pet not found' });
     }
 
-    return res.status(200).json(pet);
+    const petWithFollowStatus = {
+      ...pet,
+      isFollowing: !!(pet.followers && (pet.followers as any[]).length > 0),
+      followers: undefined 
+    };
+
+    return res.status(200).json(petWithFollowStatus);
   } catch (error) {
     console.error('Get pet profile error:', error);
     return res.status(500).json({ message: 'Internal server error' });

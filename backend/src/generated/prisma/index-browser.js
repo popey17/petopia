@@ -120,6 +120,13 @@ exports.Prisma.TransactionIsolationLevel = makeStrictEnum({
   Serializable: 'Serializable'
 });
 
+exports.Prisma.FollowScalarFieldEnum = {
+  id: 'id',
+  followerId: 'followerId',
+  followingId: 'followingId',
+  createdAt: 'createdAt'
+};
+
 exports.Prisma.PetScalarFieldEnum = {
   id: 'id',
   name: 'name',
@@ -178,6 +185,7 @@ exports.Prisma.NullsOrder = {
 
 
 exports.Prisma.ModelName = {
+  Follow: 'Follow',
   Pet: 'Pet',
   Post: 'Post',
   PostImage: 'PostImage',

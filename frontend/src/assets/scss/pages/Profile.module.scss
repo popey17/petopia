@@ -114,6 +114,17 @@
               &:hover {
                 background: variables.$primary-pink-dark;
               }
+
+              &.following {
+                background: rgba(0, 0, 0, 0.05);
+                color: variables.$text-main;
+                border: 1px solid variables.$border-color;
+
+                &:hover {
+                  background: rgba(0, 0, 0, 0.1);
+                  color: #ff4d4d; // Red-ish for unfollow hint
+                }
+              }
             }
 
             &.btn-message {
@@ -145,6 +156,15 @@
 
           strong {
             font-weight: 700;
+          }
+
+          &.clickable {
+            cursor: pointer;
+            
+            &:hover {
+              opacity: 0.7;
+              text-decoration: underline;
+            }
           }
         }
       }

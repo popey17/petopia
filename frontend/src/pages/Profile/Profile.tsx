@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { useAuthStore } from '../../stores/useAuthStore';
 import { MapPin, Calendar, Grid, Camera, Heart, MessageCircle } from 'lucide-react';
 import styles from '../../assets/scss/pages/Profile.module.scss';
 import PostDetail from '../../components/PostDetail/PostDetail';
+import FollowListModal from '../../components/FollowListModal/FollowListModal';
 import { usePostStore } from '../../stores/usePostStore';
 
 interface PetProfile {
@@ -18,7 +20,10 @@ interface PetProfile {
   location: string | null;
   _count: {
     posts: number;
+    followers: number;
+    following: number;
   };
+  isFollowing: boolean;
 }
 
 interface Post {
@@ -35,7 +40,37 @@ const Profile: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [selectedPostId, setSelectedPostId] = useState<string | null>(null);
-  const { version } = usePostStore();
+  const { user } = useAuthStore();
+  const { version, triggerRefresh } = usePostStore();
+  const [followLoading, setFollowLoading] = useState(false);
+  const [followModal, setFollowModal] = useState<'followers' | 'following' | null>(null);
+
+  const handleFollow = async () => {
+    if (!pet || !user?.defaultPet?.id || followLoading) return;
+    
+    // Don't allow pet to follow itself
+    if (user.defaultPet.id === pet.id) return;
+
+    setFollowLoading(true);
+    const method = pet.isFollowing ? 'DELETE' : 'POST';
+    
+    try {
+      const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/pets/${pet.id}/follow`, {
+        method,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ followerId: user.defaultPet.id }),
+      });
+
+      if (res.ok) {
+        // Optimistically update or just trigger refresh
+        triggerRefresh(); // This will refetch the whole profile
+      }
+    } catch (err) {
+      console.error('Follow error:', err);
+    } finally {
+      setFollowLoading(false);
+    }
+  };
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -89,15 +124,33 @@ const Profile: React.FC = () => {
             <h1>{pet.displayName}</h1>
             <span className={styles.handle}>@{pet.name}</span>
             <div className={styles.actions}>
-              <button className={styles['btn-follow']}>Follow</button>
+              {user?.defaultPet?.id !== pet.id && (
+                <button 
+                  className={`${styles['btn-follow']} ${pet.isFollowing ? styles.following : ''}`}
+                  onClick={handleFollow}
+                  disabled={followLoading}
+                >
+                  {followLoading ? '...' : (pet.isFollowing ? 'Unfollow' : 'Follow')}
+                </button>
+              )}
               <button className={styles['btn-message']}>Message</button>
             </div>
           </div>
 
           <div className={styles.stats}>
             <span><strong>{pet._count.posts}</strong> posts</span>
-            <span><strong>0</strong> followers</span>
-            <span><strong>0</strong> following</span>
+            <span 
+              className={styles.clickable} 
+              onClick={() => setFollowModal('followers')}
+            >
+              <strong>{pet._count.followers}</strong> followers
+            </span>
+            <span 
+              className={styles.clickable} 
+              onClick={() => setFollowModal('following')}
+            >
+              <strong>{pet._count.following}</strong> following
+            </span>
           </div>
 
           <div className={styles.bio}>
@@ -151,6 +204,14 @@ const Profile: React.FC = () => {
         <PostDetail 
           postId={selectedPostId} 
           onClose={() => setSelectedPostId(null)} 
+        />
+      )}
+      
+      {followModal && (
+        <FollowListModal
+          petId={pet.id}
+          type={followModal}
+          onClose={() => setFollowModal(null)}
         />
       )}
     </div>

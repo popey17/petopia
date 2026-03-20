@@ -1,3 +1,18 @@
+model Follow {
+  id String @id @default(uuid()) @db.Uuid
+
+  followerId String @db.Uuid
+  follower   Pet    @relation("petFollowing", fields: [followerId], references: [id], onDelete: Cascade)
+
+  followingId String @db.Uuid
+  following   Pet    @relation("petFollowers", fields: [followingId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@unique([followerId, followingId])
+  @@map("follows")
+}
+
 model Pet {
   id   String @id @default(uuid()) @db.Uuid
   name String @unique
@@ -16,7 +31,9 @@ model Pet {
 
   defaultFor User? @relation("defaultPet")
 
-  posts Post[]
+  posts     Post[]
+  followers Follow[] @relation("petFollowers")
+  following Follow[] @relation("petFollowing")
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
